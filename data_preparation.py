@@ -7,7 +7,7 @@ def prepare_ljspeech_data(ljspeech_dir):
 
     data = []
 
-    # Чтение CSV-файла с метаданными
+    # Reading the CSV file with metadata
     with open(metadata_path, 'r', encoding='utf-8') as f:
         reader = csv.reader(f, delimiter='|')
         for row in reader:
@@ -18,19 +18,18 @@ def prepare_ljspeech_data(ljspeech_dir):
 
     return data
 
-
 def prepare_vctk_data(vctk_dir):
     wav_dir = os.path.join(vctk_dir, 'wav48')
     txt_dir = os.path.join(vctk_dir, 'txt')
 
     data = []
 
-    # Проходим по каждому спикеру
+    # Looping through each speaker
     for speaker in os.listdir(wav_dir):
         speaker_wav_dir = os.path.join(wav_dir, speaker)
         speaker_txt_dir = os.path.join(txt_dir, speaker)
 
-        # Проверяем, есть ли соответствующие директории для спикера
+        # Checking if the corresponding directories for the speaker exist
         if os.path.exists(speaker_wav_dir) and os.path.exists(speaker_txt_dir):
             for wav_file in os.listdir(speaker_wav_dir):
                 if wav_file.endswith('.wav'):
@@ -38,7 +37,7 @@ def prepare_vctk_data(vctk_dir):
                     txt_file = wav_file.replace('.wav', '.txt')
                     txt_path = os.path.join(speaker_txt_dir, txt_file)
 
-                    # Проверяем, существует ли текстовый файл для этого аудио
+                    # Checking if the text file exists for this audio
                     if os.path.exists(txt_path):
                         with open(txt_path, 'r', encoding='utf-8') as f:
                             transcript = f.read().strip()
@@ -46,26 +45,24 @@ def prepare_vctk_data(vctk_dir):
 
     return data
 
-
 def combine_datasets(ljspeech_data, vctk_data):
     combined_data = ljspeech_data + vctk_data
     return combined_data
 
-
-# Пример использования:
+# Example usage:
 ljspeech_dir = "mel/DataSets/LJSpeech-1.1"
 vctk_dir = "mel/DataSets/archive/VCTK-Corpus/VCTK-Corpus"
 
 ljspeech_data = prepare_ljspeech_data(ljspeech_dir)
 vctk_data = prepare_vctk_data(vctk_dir)
 
-# Объединяем данные
+# Combining the data
 combined_data = combine_datasets(ljspeech_data, vctk_data)
 
-# Теперь combined_data содержит все пары (путь к аудио, транскрипция)
-# Вы можете сохранить это в файл или использовать напрямую для обучения
+# Now combined_data contains all pairs (audio path, transcription)
+# You can save this to a file or use it directly for training
 
-# Сохранение объединенных данных в файл
+# Saving the combined data to a file
 with open('combined_dataset.csv', 'w', encoding='utf-8') as f:
     writer = csv.writer(f)
     writer.writerow(['audio_path', 'transcription'])
@@ -79,4 +76,3 @@ with open(csv_file, 'r', encoding='utf-8') as f:
     with open(output_file, 'w', encoding='utf-8') as out_f:
         for row in reader:
             out_f.write(f'{row[0]}|{row[1]}\n')
-

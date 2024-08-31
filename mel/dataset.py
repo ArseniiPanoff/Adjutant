@@ -5,7 +5,6 @@ import torchaudio
 import torchaudio.transforms as T
 from torch.utils.data import Dataset
 
-
 class AudioDataset(Dataset):
     def __init__(self, csv_file):
         self.df = pd.read_csv(csv_file, delimiter='|')
@@ -31,6 +30,6 @@ class AudioDataset(Dataset):
         mel_spectrogram = mel_transform(waveform)
         mel_spectrogram_db = T.AmplitudeToDB()(mel_spectrogram)
 
-        mel_spectrogram_db = mel_spectrogram_db[:, :995]  # Ensure length matches the target length
+        mel_spectrogram_db = mel_spectrogram_db[:, :416]  # Ensure length matches the target length
 
         return mel_spectrogram_db.squeeze().numpy(), transcription

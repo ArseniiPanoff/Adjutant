@@ -1,5 +1,4 @@
 import re
-from collections import Counter
 
 from mel.dataset import AudioDataset
 
